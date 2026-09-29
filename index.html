@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SQL Hands-on - Understanding SQL Joins</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 0 50px;
+        }
+
+        /* Header */
+        .header {
+            background: #1f2937;
+            color: white;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #d1d5db;
+            font-size: 16px;
+        }
+
+        .instruction {
+            margin-top: 20px;
+            background: #374151;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        /* Main sections */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-number {
+            font-size: 13px;
+            font-weight: bold;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .section h2 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            color: #111827;
+        }
+
+        .description {
+            margin: 0 0 18px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        /* Code area */
+        .code-container {
+            position: relative;
+            background: #111827;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        pre {
+            margin: 0;
+            padding: 22px;
+            padding-right: 120px;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        code {
+            font-family: inherit;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            border: none;
+            background: #ffffff;
+            color: #111827;
+            padding: 9px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .copy-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .copy-btn.copied {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        /* Join heading */
+        .join-heading {
+            margin: 40px 0 22px;
+            padding: 22px;
+            background: #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .join-heading h2 {
+            margin: 0 0 6px;
+            font-size: 26px;
+            color: #111827;
+        }
+
+        .join-heading p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 35px;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+                padding-top: 18px;
+            }
+
+            .header {
+                padding: 22px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .section {
+                padding: 18px;
+            }
+
+            .section h2 {
+                font-size: 19px;
+            }
+
+            pre {
+                font-size: 13px;
+                padding: 18px;
+                padding-top: 55px;
+            }
+
+            .copy-btn {
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>SQL Hands-on</h1>
+        <p>Understanding SQL Joins</p>
+
+        <div class="instruction">
+            Copy → Paste → Run in your SQL terminal
+        </div>
+    </div>
+
+
+    <!-- 1 -->
+    <div class="section">
+        <div class="section-number">01</div>
+        <h2>Create the Database Schema</h2>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>CREATE SCHEMA IF NOT EXISTS data_analysis_handson;
+use data_analysis_handson;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 2 -->
+    <div class="section">
+        <div class="section-number">02</div>
+        <h2>Creating the Tables</h2>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>#CREATING A TABLE
+
+CREATE TABLE employees(
+employee_id int primary key,
+name varchar(20),
+department_id int);
+
+CREATE TABLE department(
+department_id int primary key,
+department_name varchar(20));</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 3 -->
+    <div class="section">
+        <div class="section-number">03</div>
+        <h2>Insert Employee Data</h2>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>INSERT INTO employees VALUES
+(101,'Arun',1),
+(102,'Priya',2),
+(103,'Karthick',1);</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 4 -->
+    <div class="section">
+        <div class="section-number">04</div>
+        <h2>Insert Department Data</h2>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>INSERT INTO department VALUES
+(1,'IT'),
+(2,'HR'),
+(3,'FINANCE');</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 5 -->
+    <div class="section">
+        <div class="section-number">05</div>
+        <h2>View the Tables</h2>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>select * from employees;
+select * from department;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- JOIN Heading -->
+    <div class="join-heading">
+        <h2>SQL JOINs</h2>
+        <p>Let's see how different joins combine data from two tables.</p>
+    </div>
+
+
+    <!-- 6 -->
+    <div class="section">
+        <div class="section-number">06</div>
+        <h2>INNER JOIN — Without ON</h2>
+
+        <p class="description">
+            First, observe what happens when the join condition is not specified.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code># Without on
+select name,department_name from employees as e
+inner join department as d;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 7 -->
+    <div class="section">
+        <div class="section-number">07</div>
+        <h2>INNER JOIN — With ON</h2>
+
+        <p class="description">
+            The ON condition specifies how the two tables are related.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code># With on
+select name,department_name from employees as e
+inner join department as d
+on e.department_id = d.department_id;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 8 -->
+    <div class="section">
+        <div class="section-number">08</div>
+        <h2>Add a New Employee</h2>
+
+        <p class="description">
+            This employee has department_id 4.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>INSERT INTO employees VALUES
+(104, 'Rahul', 4);</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 9 -->
+    <div class="section">
+        <div class="section-number">09</div>
+        <h2>LEFT JOIN</h2>
+
+        <p class="description">
+            Observe what happens when all records from the left table are retained.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code>#Left join
+select e.name,d.department_name from employees as e
+left join department as d
+on e.department_id = d.department_id;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 10 -->
+    <div class="section">
+        <div class="section-number">10</div>
+        <h2>RIGHT JOIN</h2>
+
+        <p class="description">
+            Observe what happens when all records from the right table are retained.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code># Right join
+select e.name,d.department_name from employees as e
+right join department as d
+on e.department_id = d.department_id;</code></pre>
+        </div>
+    </div>
+
+
+    <!-- 11 -->
+    <div class="section">
+        <div class="section-number">11</div>
+        <h2>CROSS JOIN</h2>
+
+        <p class="description">
+            Observe how every employee is combined with every department.
+        </p>
+
+        <div class="code-container">
+            <button class="copy-btn">Copy Code</button>
+
+            <pre><code># Cross join 
+select e.name,d.department_name from employees as e
+cross join department as d;</code></pre>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        SQL Hands-on Workshop
+    </div>
+
+</div>
+
+
+<script>
+    const copyButtons = document.querySelectorAll(".copy-btn");
+
+    copyButtons.forEach(button => {
+
+        button.addEventListener("click", async () => {
+
+            const code = button
+                .parentElement
+                .querySelector("code")
+                .innerText;
+
+            try {
+
+                await navigator.clipboard.writeText(code);
+
+                button.textContent = "Copied!";
+                button.classList.add("copied");
+
+                setTimeout(() => {
+                    button.textContent = "Copy Code";
+                    button.classList.remove("copied");
+                }, 1500);
+
+            } catch (error) {
+
+                /* Fallback for browsers where clipboard API is unavailable */
+                const textarea = document.createElement("textarea");
+                textarea.value = code;
+
+                document.body.appendChild(textarea);
+                textarea.select();
+
+                document.execCommand("copy");
+
+                textarea.remove();
+
+                button.textContent = "Copied!";
+                button.classList.add("copied");
+
+                setTimeout(() => {
+                    button.textContent = "Copy Code";
+                    button.classList.remove("copied");
+                }, 1500);
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
